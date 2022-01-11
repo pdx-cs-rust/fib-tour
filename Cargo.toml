@@ -1,5 +1,10 @@
 [package]
 name = "fib-tour"
-authors = ["Bart Massey <bart@cs.pdx.edu>", "http://reddit.com/u/findingajobaccount"]
+authors = [
+     "Bart Massey <bart@cs.pdx.edu>",
+     "http://reddit.com/u/findingajobaccount",
+     "https://www.reddit.com/user/yomand4847",
+]
+license-file = "LICENSE.txt"
 version = "0.1.0"
 edition = "2021"
