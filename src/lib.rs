@@ -132,7 +132,9 @@ pub fn fib_closed(n: usize) -> Option<u32> {
 }
 
 /// This dumb implementation is what you do if you want
-/// really, really fast Fibonacci Numbers.
+/// really, really fast Fibonacci Numbers. These values were
+/// computed using a simple Python program, and are likely
+/// to be correct.
 pub fn fib_lookup(n: usize) -> Option<u32> {
     const F: &[u32] = &[
         0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765,
@@ -147,23 +149,31 @@ pub fn fib_lookup(n: usize) -> Option<u32> {
 mod test {
     use super::*;
 
-    fn test_fib(name: &str, f: fn(usize) -> Option<u32>) {
+    #[test]
+    fn test_fib_lookup() {
         let fibs = [0, 1, 1, 2, 3, 5, 8];
         for (i, fib) in fibs.into_iter().enumerate() {
-            let ff = f(i);
-            eprintln!("{}: {} {:?}", name, i, ff);
-            assert_eq!(Some(fib), ff);
+            assert_eq!(Some(fib), fib_lookup(i));
         }
-        assert_eq!(Some(701_408_733), f(44));
-        assert_eq!(Some(1_134_903_170), f(45));
-        assert_eq!(Some(1_836_311_903), f(46));
-        assert_eq!(Some(2_971_215_073), f(47));
+        assert_eq!(Some(2_971_215_073), fib_lookup(47));
         for i in 48..=51 {
-            let ff = f(i);
-            eprintln!("{}: {} {:?}", name, i, ff);
-            assert!(ff.is_none());
+            assert!(fib_lookup(i).is_none());
         }
-        assert!(f(100).is_none());
+        assert!(fib_lookup(100).is_none());
+    }
+
+    fn test_fib(name: &str, f: fn(usize) -> Option<u32>) {
+        for i in 0..=47 {
+            let fi = f(i);
+            let fli = fib_lookup(i);
+            eprintln!("{}: {} {:?} ({:?})", name, i, fi, fli);
+            assert_eq!(fi, fli);
+        }
+        for i in 48..=51 {
+            let fi = f(i);
+            eprintln!("{}: {} {:?} (None)", name, i, fi);
+            assert!(fi.is_none());
+        }
     }
 
     #[test]
@@ -175,6 +185,5 @@ mod test {
         test_fib("fold", fib_fold);
         test_fib("lazy", fib_lazy);
         test_fib("closed", fib_closed);
-        test_fib("lookup", fib_lookup);
     }
 }
